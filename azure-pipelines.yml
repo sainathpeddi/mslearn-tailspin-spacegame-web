@@ -38,6 +38,14 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
 
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'sonar-connection'
+    organization: 'sainathorg'
+    scannerMode: 'MSBuild'
+    projectKey: 'sainath-proj'
+    projectName: 'sainath-proj'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build the project - $(buildConfiguration)'
   inputs:
@@ -45,6 +53,10 @@ steps:
     arguments: '--no-restore --configuration $(buildConfiguration)'
     projects: '**/*.csproj'
 
+- task: SonarCloudAnalyze@1
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
 - task: DotNetCoreCLI@2
   displayName: 'Publish the project - $(buildConfiguration)'
   inputs:
